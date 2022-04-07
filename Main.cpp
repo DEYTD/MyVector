@@ -62,5 +62,6 @@ int main()
     printVector(vector);
     auto iterator = vector.begin();
     std::cout << *iterator << '\n';
+    std::cout << (iterator == vector.begin()) << (iterator == vector2.begin()) << '\n';
     return 0;
 }
