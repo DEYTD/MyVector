@@ -48,6 +48,9 @@ public:
     void insert(int index, const MyVector<T> &vector);
     void insert(int index, const MyVector<T>::VectorIterator begin, const MyVector<T>::VectorIterator end);
     void erase(int index, int count = 1);
+    void map(void (*function)(T&)); //applies function to each element
+    template <class T2> MyVector<T2> map(T2 (*function)(T)); //returns vector such that v2[i] == function(v[i])
+    void filter(bool (*predicate)(T)); //deletes all elements for which predicate returns false
 };
 ```
 

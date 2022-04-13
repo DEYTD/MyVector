@@ -52,16 +52,29 @@ int main()
     vector.erase(0, 213133);
     printVector(vector);
     std::cout << vector.capacity() << '\n';
-    // tests for iterators
+    
+    std::cout << "tests for iterators\n";
     std::cout << *vector3.begin() << '\n';
     std::cout << *(vector3.begin()++) << '\n';
     std::cout << *(--vector3.end()) << '\n';
     printVector(vector);
-    std::cout << '\n';
     vector.insert(0, vector3.begin(), vector3(3));
     printVector(vector);
     auto iterator = vector.begin();
     std::cout << *iterator << '\n';
-    std::cout << (iterator == vector.begin()) << (iterator == vector2.begin()) << '\n';
+    std::cout << (iterator == vector.begin()) << (iterator != vector2.begin()) << '\n';
+    
+    std::cout << "tests for maps\n";
+    printVector(vector);
+    vector.map([](int &v){++v;});
+    printVector(vector);
+    bool (*func)(int) = [](int v) -> bool {return v != 5;};
+    MyVector<bool> bvector(vector.map(func));
+    printVector(bvector);
+    vector.insert(0, 40, 4);
+    vector.insert(3, 7, 5);
+    printVector(vector);
+    vector.filter([](int v){return v > 7;});
+    printVector(vector);
     return 0;
 }

@@ -58,6 +58,9 @@ public:
     void insert(int index, const MyVector<T> &vector);
     void insert(int index, const MyVector<T>::VectorIterator begin, const MyVector<T>::VectorIterator end);
     void erase(int index, int count = 1);
+    void map(void (*function)(T&)); //applies function to each element
+    template <class T2> MyVector<T2> map(T2 (*function)(T)); //returns vector such that v2[i] == function(v[i])
+    void filter(bool (*predicate)(T)); //deletes all elements for which predicate returns false
 };
 
 // MyVector::VectorIterator method implementations
@@ -348,7 +351,7 @@ void MyVector<T>::insert(int index, T element, int count)
     _length += count;
     for (int i = _length - 1; i >= index + count; i--)
     {
-        _data[i] = _data[i - 1];
+        _data[i] = _data[i - count];
     }
     for (int i = index; i < index + count; i++)
     {
@@ -401,5 +404,43 @@ void MyVector<T>::erase(int index, int count)
         _data[i] = _data[i + count];
     }
     _length -= count;
+    shrink();
+}
+template <class T>
+template <class T2>
+MyVector<T2> MyVector<T>::map(T2 (*function)(T))
+{
+    MyVector<T2> result;
+    result.reserve(_length);
+    for (int i = 0; i < _length; ++i)
+    {
+        result.push_back(function(_data[i]));
+    }
+    return result;
+}
+template <class T>
+void MyVector<T>::map(void (*function)(T&))
+{
+    for (int i = 0; i < _length; ++i)
+    {
+        function(_data[i]);
+    }
+}
+template <class T>
+void MyVector<T>::filter(bool (*predicate)(T))
+{
+    T* data = new T[_length];
+    int j = 0;
+    for (int i = 0; i < _length; ++i)
+    {
+        if(predicate(_data[i]))
+        {
+            data[j] = _data[i];
+            ++j;
+        }
+    }
+    _length = j;
+    delete _data;
+    _data = data;
     shrink();
 }
